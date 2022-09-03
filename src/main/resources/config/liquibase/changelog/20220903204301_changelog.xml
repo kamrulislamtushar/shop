@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="kamrul.islam (generated)" id="1662237799891-1">
+        <dropForeignKeyConstraint baseTableName="user_authority" constraintName="fk_authority_name"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662237799891-2">
+        <dropForeignKeyConstraint baseTableName="user_authority" constraintName="fk_user_id"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662237799891-3">
+        <dropUniqueConstraint constraintName="ux_user_email" tableName="user"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662237799891-4">
+        <dropUniqueConstraint constraintName="ux_user_login" tableName="user"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662237799891-5">
+        <dropTable tableName="user"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662237799891-6">
+        <dropTable tableName="user_authority"/>
+    </changeSet>
+</databaseChangeLog>

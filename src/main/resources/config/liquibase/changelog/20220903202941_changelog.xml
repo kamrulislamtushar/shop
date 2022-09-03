@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="kamrul.islam (generated)" id="1662236999757-1">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662236999757-2">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FKgj0uvvoai4bd9ggd99ud8emj1" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="authority" validate="true"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662236999757-3">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FKoq7hln6u9aec53l0qnnygodao" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662236999757-4">
+        <dropForeignKeyConstraint baseTableName="user_authority" constraintName="fk_authority_name"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662236999757-5">
+        <dropForeignKeyConstraint baseTableName="user_authority" constraintName="fk_user_id"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662236999757-6">
+        <dropTable tableName="user_authority"/>
+    </changeSet>
+</databaseChangeLog>

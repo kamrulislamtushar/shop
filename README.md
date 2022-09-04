@@ -75,3 +75,9 @@ Then run:
 ```
 docker-compose -f src/main/docker/app.yml up -d
 ```
+
+
+Visit swagger documentation for more information
+```
+http://localhost:8080/swagger-ui.html#/
+```

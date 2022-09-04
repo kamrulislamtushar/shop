@@ -1,10 +1,18 @@
 package com.online.shop.service.dto;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
  * A DTO for the {@link com.online.shop.domain.Product} entity.
  */
+
+@Data
+@Setter
+@Getter
 public class ProductDTO implements Serializable {
     
     private Long id;
@@ -21,7 +29,7 @@ public class ProductDTO implements Serializable {
 
     private ProductCategoryDTO productCategoryDTO;
 
-    
+
     public Long getId() {
         return id;
     }
@@ -70,33 +78,24 @@ public class ProductDTO implements Serializable {
         this.price = price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ProductDTO)) {
-            return false;
-        }
-
-        return id != null && id.equals(((ProductDTO) o).id);
+    public ProductCategoryDTO getProductCategoryDTO() {
+        return productCategoryDTO;
     }
 
-    @Override
-    public int hashCode() {
-        return 31;
+    public void setProductCategoryDTO(ProductCategoryDTO productCategoryDTO) {
+        this.productCategoryDTO = productCategoryDTO;
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
         return "ProductDTO{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", imageUrl='" + getImageUrl() + "'" +
-            ", sku='" + getSku() + "'" +
-            ", price=" + getPrice() +
-            "}";
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", sku='" + sku + '\'' +
+                ", price=" + price +
+                ", productCategoryDTO=" + productCategoryDTO +
+                '}';
     }
 }

@@ -3,23 +3,22 @@ package com.online.shop.web.rest;
 import com.online.shop.config.Constants;
 import com.online.shop.domain.Order;
 import com.online.shop.service.OrderService;
+import com.online.shop.service.dto.CreateOrderDto;
 import com.online.shop.web.rest.errors.BadRequestAlertException;
-import com.online.shop.service.dto.OrderDTO;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -62,6 +61,21 @@ public class OrderResource {
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
+    @PostMapping("/place-orders")
+    public  ResponseEntity<Order> placeOrder(@Valid @RequestBody CreateOrderDto createOrderDto) throws URISyntaxException {
+        log.debug("REST request to place Order : {}", createOrderDto);
+        if (createOrderDto.getProductDTO().isEmpty()) {
+            throw new BadRequestAlertException("Select at least one product to continue!", ENTITY_NAME, "emptyorder");
+        } else {
+            Order result = orderService.createOrder(createOrderDto);
+            return ResponseEntity.created(new URI("/api/place-orders/" + result.getId()))
+                    .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+                    .body(result);
+        }
+    }
+
+
 
     /**
      * {@code PUT  /orders} : Updates an existing order.

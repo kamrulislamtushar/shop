@@ -3,6 +3,7 @@ package com.online.shop.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.online.shop.domain.enumeration.Status;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -29,7 +30,9 @@ public class Order extends AbstractAuditingEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
+    private Status status = Status.PENDING;
+
+
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
@@ -72,7 +75,13 @@ public class Order extends AbstractAuditingEntity implements Serializable {
         return this;
     }
 
+    public Status getStatus() {
+        return status;
+    }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
 
     public void setTotalPrice(Double totalPrice) {
@@ -101,6 +110,7 @@ public class Order extends AbstractAuditingEntity implements Serializable {
         return "Order{" +
             "id=" + getId() +
             ", totalPrice=" + getTotalPrice() +
+            ", status=" + getStatus() +
             "}";
     }
 }

@@ -31,6 +31,18 @@ public class OrderItem extends AbstractAuditingEntity implements Serializable {
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
+    @OneToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     public Order getOrder() {
         return order;
     }

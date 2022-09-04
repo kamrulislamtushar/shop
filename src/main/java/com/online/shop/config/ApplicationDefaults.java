@@ -9,7 +9,7 @@ public interface ApplicationDefaults {
     }
 
     public interface ClientApp {
-        String name = "jhipsterApp";
+        String name = Constants.APPLICATION_NAME;
     }
 
     public interface Registry {

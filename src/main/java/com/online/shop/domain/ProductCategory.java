@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "product_categories")
-public class ProductCategory implements Serializable {
+public class ProductCategory extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

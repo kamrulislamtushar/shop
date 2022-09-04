@@ -79,11 +79,11 @@
             <column name="activated" type="boolean"/>
             <column name="created_date" type="timestamp"/>
         </loadData>
-        <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="user" columnName="created_date" columnDataType="datetime"/>
         <loadData
                   file="config/liquibase/data/authority.csv"
                   separator=";"
-                  tableName="jhi_authority">
+                  tableName="authority">
             <column name="name" type="string"/>
         </loadData>
 
@@ -116,7 +116,7 @@
         <addPrimaryKey columnNames="event_id, name" tableName="persistent_audit_evt_data"/>
 
         <createIndex indexName="idx_persistent_audit_event"
-                     tableName="jhi_persistent_audit_event"
+                     tableName="persistent_audit_event"
                      unique="false">
             <column name="principal" type="varchar(50)"/>
             <column name="event_date" type="timestamp"/>

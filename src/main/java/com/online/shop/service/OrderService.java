@@ -1,6 +1,7 @@
 package com.online.shop.service;
 
 import com.online.shop.domain.Order;
+import com.online.shop.service.dto.CreateOrderDto;
 import com.online.shop.service.dto.OrderDTO;
 
 import org.springframework.data.domain.Page;
@@ -20,6 +21,9 @@ public interface OrderService {
      * @return the persisted entity.
      */
     Order save(Order order);
+
+
+    Order createOrder(CreateOrderDto order);
 
     /**
      * Get all the orders.

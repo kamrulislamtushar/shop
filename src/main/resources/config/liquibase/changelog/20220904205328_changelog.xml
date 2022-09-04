@@ -1,0 +1,94 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-1">
+        <createTable tableName="order_item">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_itemPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime(6)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="datetime(6)"/>
+            <column name="quantity" type="INT"/>
+            <column name="total_price" type="DOUBLE"/>
+            <column name="order_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-2">
+        <createTable tableName="product_categories">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="product_categoriesPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime(6)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="datetime(6)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="image_url" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-3">
+        <createTable tableName="product_orders">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="product_ordersPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime(6)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="datetime(6)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="total_price" type="DOUBLE"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-4">
+        <createTable tableName="products">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="productsPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime(6)"/>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="datetime(6)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="image_url" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="price" type="DOUBLE"/>
+            <column name="sku" type="VARCHAR(255)"/>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-5">
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="products" constraintName="FK6t5dtw6tyo83ywljwohuc6g7k" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_categories" validate="true"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-6">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="order_item" constraintName="FKc5uhmwioq5kscilyuchp4w49o" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="products" validate="true"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-7">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="product_orders" constraintName="FKr14cerw2e70ow8rbbj83mbvja" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-8">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_item" constraintName="FKsinhrcsuy2iro7pdcyxnenjvk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="product_orders" validate="true"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-9">
+        <dropForeignKeyConstraint baseTableName="persistent_audit_evt_data" constraintName="fk_evt_pers_audit_evt_data"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-10">
+        <dropTable tableName="persistent_audit_event"/>
+    </changeSet>
+    <changeSet author="kamrul.islam (generated)" id="1662324828160-11">
+        <dropTable tableName="persistent_audit_evt_data"/>
+    </changeSet>
+</databaseChangeLog>

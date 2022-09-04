@@ -34,8 +34,6 @@
 
         <!-- Dependency versions -->
         <jhipster-dependencies.version>3.9.1</jhipster-dependencies.version>
-        <!-- The spring-boot version should match the one managed by
-        https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
         <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
         <!-- The hibernate version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
@@ -70,14 +68,12 @@
         <jib-maven-plugin.version>2.4.0</jib-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
-        <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
         <jacoco.utReportFolder>${project.build.directory}/jacoco/test</jacoco.utReportFolder>
         <jacoco.utReportFile>${jacoco.utReportFolder}/test.exec</jacoco.utReportFile>
         <jacoco.itReportFolder>${project.build.directory}/jacoco/integrationTest</jacoco.itReportFolder>
         <jacoco.itReportFile>${jacoco.itReportFolder}/integrationTest.exec</jacoco.itReportFile>
         <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
-        <!-- jhipster-needle-maven-property -->
     </properties>
 
     <dependencyManagement>
@@ -89,7 +85,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- jhipster-needle-maven-add-dependency-management -->
         </dependencies>
     </dependencyManagement>
 
@@ -193,6 +188,12 @@
             <artifactId>spring-boot-loader-tools</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
@@ -223,6 +224,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>2.4.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -294,7 +300,6 @@
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
         </dependency>
-        <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
     <build>
@@ -341,10 +346,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
             </plugin>
@@ -360,7 +361,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
             </plugin>
-            <!-- jhipster-needle-maven-add-plugin -->
         </plugins>
         <pluginManagement>
             <plugins>
@@ -380,12 +380,6 @@
                             <version>${spring-nohttp-checkstyle.version}</version>
                         </dependency>
                     </dependencies>
-<!--                    <configuration>-->
-<!--                        <configLocation>checkstyle.xml</configLocation>-->
-<!--                        <includes>pom.xml,README.md</includes>-->
-<!--                        <excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*</excludes>-->
-<!--                        <sourceDirectories>./</sourceDirectories>-->
-<!--                    </configuration>-->
                     <executions>
                         <execution>
                             <goals>
@@ -423,7 +417,6 @@
                                 <artifactId>jaxb-runtime</artifactId>
                                 <version>${jaxb-runtime.version}</version>
                             </path>
-                            <!-- jhipster-needle-maven-add-annotation-processor -->
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
@@ -463,11 +456,6 @@
                             <goals>
                                 <goal>read-project-properties</goal>
                             </goals>
-                            <configuration>
-                                <files>
-                                    <file>sonar-project.properties</file>
-                                </files>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -567,7 +555,6 @@
                             </ports>
                             <environment>
                                 <SPRING_OUTPUT_ANSI_ENABLED>ALWAYS</SPRING_OUTPUT_ANSI_ENABLED>
-                                <JHIPSTER_SLEEP>0</JHIPSTER_SLEEP>
                             </environment>
                             <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                         </container>
@@ -667,11 +654,11 @@
                     <configuration>
                         <rules>
                             <requireMavenVersion>
-                                <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>
+                                <message>You are running an older version of Maven. Spring requires at least Maven ${maven.version}</message>
                                 <version>[${maven.version},)</version>
                             </requireMavenVersion>
                             <requireJavaVersion>
-                                <message>You are running an incompatible version of Java. JHipster supports JDK 8 to 14.</message>
+                                <message>You are running an incompatible version of Java. Spring supports JDK 8 to 14.</message>
                                 <version>[1.8,15)</version>
                             </requireJavaVersion>
                         </rules>
@@ -681,9 +668,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-idea-plugin</artifactId>
                     <version>${maven-idea-plugin.version}</version>
-<!--                    <configuration>-->
-<!--                        <exclude>node_modules</exclude>-->
-<!--                    </configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -768,11 +752,6 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>${sonar-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
@@ -793,7 +772,6 @@
                     </configuration>
 
                 </plugin>
-                <!-- jhipster-needle-maven-add-plugin-management -->
             </plugins>
         </pluginManagement>
     </build>
@@ -963,6 +941,5 @@
                 </pluginManagement>
             </build>
         </profile>
-        <!-- jhipster-needle-maven-add-profile -->
     </profiles>
 </project>

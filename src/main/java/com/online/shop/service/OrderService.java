@@ -20,8 +20,6 @@ public interface OrderService {
      * @param orderDTO the entity to save.
      * @return the persisted entity.
      */
-    Order save(Order order);
-
 
     Order createOrder(CreateOrderDto order);
 

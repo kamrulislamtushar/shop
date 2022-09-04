@@ -6,6 +6,7 @@ import com.online.shop.domain.User;
 import com.online.shop.domain.enumeration.Status;
 import com.online.shop.repository.UserRepository;
 import com.online.shop.security.SecurityUtils;
+import com.online.shop.service.MailService;
 import com.online.shop.service.OrderService;
 import com.online.shop.domain.Order;
 import com.online.shop.repository.OrderRepository;
@@ -38,22 +39,18 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final MailService mailService;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
             UserRepository userRepository,
-            ModelMapper modelMapper
+            ModelMapper modelMapper,
+            MailService mailService
                             ) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
-    }
-
-    @Override
-    public Order save(Order order) {
-        log.debug("Request to save Order : {}", order);
-        order = orderRepository.save(order);
-        return order;
+        this.mailService = mailService;
     }
 
 
@@ -61,10 +58,11 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(CreateOrderDto createOrder) {
 
         Double totalBill = createOrder.getProductDTO().stream().mapToDouble(order -> order.getPrice() * order.getQuantity()).sum();
+        User user = getAuthUser();
         Order order = new Order();
         order.setStatus(Status.PENDING);
         order.setTotalPrice(totalBill);
-        order.setUser(getAuthUser());
+        order.setUser(user);
         List<OrderItem> orderItems = new ArrayList<>();
         createOrder.getProductDTO().forEach(productDTO -> {
             OrderItem orderItem = new OrderItem();
@@ -75,6 +73,7 @@ public class OrderServiceImpl implements OrderService {
         });
         order.setOrderItems(orderItems);
         order = orderRepository.save(order);
+        mailService.sendOrderCreatedEmail(order, user);
         return order;
 
     }

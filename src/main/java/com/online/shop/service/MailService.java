@@ -1,6 +1,7 @@
 package com.online.shop.service;
 
 import com.online.shop.config.ApplicationCustomProperties;
+import com.online.shop.domain.Order;
 import com.online.shop.domain.User;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -29,6 +30,7 @@ public class MailService {
     private final Logger log = LoggerFactory.getLogger(MailService.class);
 
     private static final String USER = "user";
+    private static final String ORDER = "order";
 
     private static final String BASE_URL = "baseUrl";
 
@@ -84,6 +86,24 @@ public class MailService {
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 
+
+    @Async
+    public void sendEmailFromTemplateForOrder(User user, Order order, String templateName, String titleKey) {
+        if (user.getEmail() == null) {
+            log.debug("Email doesn't exist for user '{}'", user.getLogin());
+            return;
+        }
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable(USER, user);
+        context.setVariable(ORDER, order);
+        context.setVariable(BASE_URL, properties.getMail().getBaseUrl());
+        String content = templateEngine.process(templateName, context);
+        String subject = messageSource.getMessage(titleKey, null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+
     @Async
     public void sendActivationEmail(User user) {
         log.debug("Sending activation email to '{}'", user.getEmail());
@@ -100,5 +120,12 @@ public class MailService {
     public void sendPasswordResetMail(User user) {
         log.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
+    }
+
+
+    @Async
+    public void sendOrderCreatedEmail(Order order, User user) {
+        log.debug("Sending order created email to " + user.getEmail());
+        sendEmailFromTemplateForOrder(user, order, "/mail/orderCreatedEmail", "email.order.create");
     }
 }

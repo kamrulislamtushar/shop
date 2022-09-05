@@ -5,9 +5,12 @@ import com.online.shop.domain.User;
 import com.online.shop.repository.UserRepository;
 import com.online.shop.security.AuthoritiesConstants;
 import com.online.shop.service.MailService;
+import com.online.shop.service.criteria.UserCriteria;
 import com.online.shop.util.HeaderUtil;
-import com.online.shop.util.PaginationUtil;
 import com.online.shop.util.ResponseUtil;
+import io.github.jhipster.web.util.PaginationUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import java.util.Collections;
 import com.online.shop.service.UserService;
@@ -18,9 +21,12 @@ import com.online.shop.web.rest.errors.LoginAlreadyUsedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -36,23 +42,21 @@ public class UserResource {
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
 
     private String applicationName =  Constants.APPLICATION_NAME;
+    private String ENTITY_NAME =  "User";
 
     private final UserService userService;
 
     private final UserRepository userRepository;
 
-    private final MailService mailService;
-
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    public UserResource(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.mailService = mailService;
     }
 
 
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDTO);
         if (userDTO.getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
@@ -62,8 +66,7 @@ public class UserResource {
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
-            User newUser = userService.createUser(userDTO);
-            mailService.sendCreationEmail(newUser);
+            UserDTO newUser = userService.createUser(userDTO);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
                 .headers(HeaderUtil.createAlert(applicationName,  "userManagement.created", newUser.getLogin()))
                 .body(newUser);
@@ -87,5 +90,17 @@ public class UserResource {
         return ResponseUtil.wrapOrNotFound(updatedUser,
             HeaderUtil.createAlert(applicationName, "userManagement.updated", userDTO.getLogin()));
     }
-
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<List<UserDTO>> getAllUsers(UserCriteria userCriteria, Pageable pageable) {
+        final Page<UserDTO> page = userService.findByCriteria(userCriteria,pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+    @DeleteMapping("/users/{login}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String login)  {
+        log.debug("REST request to delete Product : {}", login);
+        userService.deleteUser(login);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, login)).build();
+    }
 }

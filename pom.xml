@@ -577,10 +577,10 @@
                         <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
                         <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                         <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>jdbc:mysql://localhost:3306/shop</url>
-                        <defaultSchemaName>shop</defaultSchemaName>
-                        <username>root</username>
-                        <password></password>
+                        <url>${env.SPRING_DATASOURCE_URL_DETAILS}</url>
+                        <defaultSchemaName>${env.SPRING_DATASOURCE_DB}</defaultSchemaName>
+                        <username>${env.SPRING_DATASOURCE_USER}</username>
+                        <password>${env.SPRING_DATASOURCE_PASSWORD}</password>
                         <referenceUrl>hibernate:spring:com.online.shop.domain?dialect=org.hibernate.dialect.MySQL8Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
                         <verbose>true</verbose>
                         <logging>debug</logging>

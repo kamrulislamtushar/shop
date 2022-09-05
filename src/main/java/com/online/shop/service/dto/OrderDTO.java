@@ -8,13 +8,12 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A DTO for the {@link com.online.shop.domain.Order} entity.
  */
-@Data
-@Setter
-@Getter
+
 public class OrderDTO implements Serializable {
     
     private Long id;
@@ -72,5 +71,18 @@ public class OrderDTO implements Serializable {
                 ", orderItems=" + orderItems +
                 ", userDTO=" + userDTO +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDTO orderDTO = (OrderDTO) o;
+        return Objects.equals(id, orderDTO.id) && Objects.equals(totalPrice, orderDTO.totalPrice) && status == orderDTO.status && Objects.equals(orderItems, orderDTO.orderItems) && Objects.equals(userDTO, orderDTO.userDTO);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, totalPrice, status, orderItems, userDTO);
     }
 }

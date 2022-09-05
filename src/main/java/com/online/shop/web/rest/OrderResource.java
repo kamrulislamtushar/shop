@@ -2,7 +2,12 @@ package com.online.shop.web.rest;
 
 import com.online.shop.config.Constants;
 import com.online.shop.domain.Order;
+import com.online.shop.domain.OrderDetails;
+import com.online.shop.domain.Product;
+import com.online.shop.security.AuthoritiesConstants;
 import com.online.shop.service.OrderService;
+import com.online.shop.service.criteria.OrderDetailsCriteria;
+import com.online.shop.service.criteria.ProductCriteria;
 import com.online.shop.service.dto.CreateOrderDto;
 import com.online.shop.web.rest.errors.BadRequestAlertException;
 
@@ -14,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,12 +69,23 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("/orders")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Order>> getAllOrders(Pageable pageable) {
         log.debug("REST request to get a page of Orders");
         Page<Order> page = orderService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+
+    @GetMapping("/orders-filter")
+    public ResponseEntity<List<OrderDetails>> getAllOrdersByCriteria(OrderDetailsCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get a page of Products");
+        Page<OrderDetails> page = orderService.getAllOrdersByCriteria(pageable, criteria);
+        HttpHeaders headers = com.online.shop.util.PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+
 
     /**
      * {@code GET  /orders/:id} : get the "id" order.

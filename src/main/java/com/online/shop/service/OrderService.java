@@ -1,6 +1,8 @@
 package com.online.shop.service;
 
 import com.online.shop.domain.Order;
+import com.online.shop.domain.OrderDetails;
+import com.online.shop.service.criteria.OrderDetailsCriteria;
 import com.online.shop.service.dto.CreateOrderDto;
 import com.online.shop.service.dto.OrderDTO;
 
@@ -30,6 +32,14 @@ public interface OrderService {
      * @return the list of entities.
      */
     Page<Order> findAll(Pageable pageable);
+
+    /**
+     * Get all the orders.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<OrderDetails> getAllOrdersByCriteria(Pageable pageable, OrderDetailsCriteria criteria);
 
 
     /**

@@ -2,7 +2,9 @@ package com.online.shop.web.rest;
 
 import com.online.shop.config.Constants;
 import com.online.shop.domain.Product;
+import com.online.shop.security.AuthoritiesConstants;
 import com.online.shop.service.ProductService;
+import com.online.shop.service.criteria.ProductCriteria;
 import com.online.shop.util.HeaderUtil;
 import com.online.shop.util.PaginationUtil;
 import com.online.shop.util.ResponseUtil;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +56,7 @@ public class ProductResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/products")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) throws URISyntaxException {
         log.debug("REST request to save Product : {}", product);
         if (product.getId() != null) {
@@ -74,6 +78,7 @@ public class ProductResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/products")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Product> updateProduct(@RequestBody Product product) throws URISyntaxException {
         log.debug("REST request to update Product : {}", product);
         if (product.getId() == null) {
@@ -92,9 +97,9 @@ public class ProductResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of products in body.
      */
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts(Pageable pageable) {
+    public ResponseEntity<List<Product>> getAllProducts(ProductCriteria criteria, Pageable pageable) {
         log.debug("REST request to get a page of Products");
-        Page<Product> page = productService.findAll(pageable);
+        Page<Product> page = productService.findAll(pageable, criteria);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -113,12 +118,28 @@ public class ProductResource {
     }
 
     /**
+     * {@code GET  /products/:categoryId} : get the "categoryId" product.
+     *
+     * @param categoryId the id of the productDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the productDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/products/{categoryId}")
+    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable Long categoryId, Pageable pageable) {
+        log.debug("REST request to get Product : {}", categoryId);
+        Page<Product> page = productService.findAllBYCategory(pageable, categoryId);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+
+    /**
      * {@code DELETE  /products/:id} : delete the "id" product.
      *
      * @param id the id of the productDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/products/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         log.debug("REST request to delete Product : {}", id);
         productService.delete(id);

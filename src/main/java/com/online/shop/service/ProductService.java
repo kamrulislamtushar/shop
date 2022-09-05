@@ -1,7 +1,7 @@
 package com.online.shop.service;
 
 import com.online.shop.domain.Product;
-import com.online.shop.service.dto.ProductDTO;
+import com.online.shop.service.criteria.ProductCriteria;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,16 @@ public interface ProductService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<Product> findAll(Pageable pageable);
+    Page<Product> findAll(Pageable pageable, ProductCriteria criteria);
+
+
+    /**
+     * Get all the products by category.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<Product> findAllBYCategory(Pageable pageable, Long categoryId);
 
 
     /**
